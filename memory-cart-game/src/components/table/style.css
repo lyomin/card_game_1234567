@@ -1,0 +1,28 @@
+/* Nauja klasė pagrindiniam turiniui (čia bus jūsų žaidimo lenta) */
+.main-content {
+  flex: 1;                   /* Priverčia šį bloką išsiplėsti ir nustumti footerį žemyn */
+  display: flex;
+  justify-content: center;   /* Centruoja lentą horizontaliai */
+  align-items: center;       /* Centruoja lentą vertikaliai */
+  padding: 20px;
+}
+
+/* Pačios žaidimo lentos stilius (lieka toks pat, tik išimtas padding) */
+.gameBoard {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer klasė, kuri visada bus apačioje */
+.footer {
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  background-color: #2c3e50; /* Neprivaloma tamsi fono spalva */
+  color: white;
+  margin-top: auto;          /* Papildomas saugiklis, nustumiantis į apačią */
+}

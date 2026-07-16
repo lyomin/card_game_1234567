@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Card from '../card/Card';
-
+import './style.css'
 interface TableProps {
     width: number;
     height: number;
@@ -75,10 +75,8 @@ const Table = ({width, height, score} : TableProps) => {
     const colsArray = Array.from({ length: width });
 
   return (
-    <>	
-
-    <button onClick={populateValues}> NEW GANE </button>
-        <table>
+    <div className='main-content'>	
+        <table className='gameBoard'>
             {rowsArray.map((_,rowIndex) => 
                 (<tr key={rowIndex}>  
                     {colsArray.map((_,colIndex) => 
@@ -114,7 +112,7 @@ const Table = ({width, height, score} : TableProps) => {
             )
             }
         </table>
-    </>
+    </div>
   );
 }
 

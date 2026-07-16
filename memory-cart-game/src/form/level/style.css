@@ -1,0 +1,42 @@
+/* Centruoja visą komponentą ekrano viduryje */
+.level-selector-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+/* Antraštės stilius */
+.title {
+  margin-bottom: 15px;
+  font-family: sans-serif;
+  color: #333;
+}
+
+/* Mygtukų išrikiavimas į lankstų sąrašą (vertikalų arba horizontalų) */
+.button-list {
+  display: flex;
+  flex-direction: row; /* Pakeiskite į 'column', jei norite mygtukų vienas po kitu */
+  gap: 12px;           /* Tarpai tarp mygtukų */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Gražesnis mygtukų stilius (nebūtina, bet patogu testavimui) */
+.level-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.level-btn:hover {
+  background-color: #2980b9;
+}
