@@ -1,6 +1,5 @@
-import Table from './components/table/Table'
 import Footer from './components/footer/Footer'
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Game from './components/game/Game';
 
 
