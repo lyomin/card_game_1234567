@@ -104,7 +104,7 @@ const Table = ({width, height, score} : TableProps) => {
                                 }
                                 >
                             <Card isFlipped={selectedCards.includes(`${rowIndex} ${colIndex}`)} isShowCard={!hiddenCards.includes(`${rowIndex} ${colIndex}`)}>
-                                <img src={new URL(`../../assets/card-${tableCards[rowIndex * (width) + colIndex]}.png`, import.meta.url).href} />
+                                <img src={`card-${tableCards[rowIndex * (width) + colIndex]}.png`} />
                             </Card>
                         </td>)
                     )
