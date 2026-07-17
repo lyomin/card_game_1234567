@@ -1,16 +1,17 @@
+import type { TableLevel } from "../../model/TableLevel";
 import "./style.css"
 
 
 interface LevelSelectorProps {
-    levels : Map<string, number[]>;
-    setLevel : (dimentions : number[]) => void;
+    levels : Map<string, TableLevel>;
+    setLevel : (dimentions : TableLevel) => void;
 }
 
 const LevelSelector = ({ levels, setLevel }: LevelSelectorProps) => {
     return (
         // Naudojame div vietoj <> stiliaus pritaikymui
         <div className="level-selector-container">
-            <h2 className="title">Select mode</h2>
+            <h2 className="title">Select deificulity</h2>
             
             {/* Mygtukų sąrašas */}
             <div className="button-list">

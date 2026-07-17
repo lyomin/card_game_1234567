@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import Card from '../card/Card';
 import './style.css'
+import { CardIndex, type CardIndexInterface } from '../../model/CardIndex';
 interface TableProps {
     width: number;
     height: number;
     score: (time: number) => void;
 }
 
-const getIndex = (strIndex: string, width: number): number => {
-  const [row, col] = strIndex.split(' ');
-  
-  // Formulė: eilutė * bendras_stulpelių_skaičius + stulpelis
-  return parseInt(row, 10) * width + parseInt(col, 10);
+const getIndex = (index: CardIndexInterface, width: number): number => {
+  return index.x * width + index.y;
 };
 
 const getSeconds = (date: Date) => {
@@ -20,9 +18,9 @@ const getSeconds = (date: Date) => {
 const Table = ({width, height, score} : TableProps) => {
 
 
-    const [selectedCards, setSelectedCards] = useState<string[]>([]);
+    const [selectedCards, setSelectedCards] = useState<CardIndexInterface[]>([]);
     const [tableCards, setTableCards] = useState<number[]>([]);
-    const [hiddenCards, setHiddenCards] = useState<string[]>([]);
+    const [hiddenCards, setHiddenCards] = useState<CardIndexInterface[]>([]);
     const [startTime, setStartTime] = useState<Date|null>(null);
 
     const populateValues = () => {
@@ -84,8 +82,11 @@ const Table = ({width, height, score} : TableProps) => {
                             key={colIndex} 
                             onClick={ 
                                 () => {
-                                    const selectedCard = `${rowIndex} ${colIndex}`;
-                                    if (selectedCards.length < 2 && !selectedCards.includes(selectedCard) && !hiddenCards.includes(selectedCard)) {
+                                    const selectedCard = new CardIndex(rowIndex, colIndex);
+                                    if (
+                                        selectedCards.length < 2 
+                                        && selectedCards.findIndex((val : CardIndexInterface) => selectedCard.isSame(val)) === -1 
+                                        && hiddenCards.findIndex((val : CardIndexInterface) => selectedCard.isSame(val)) === -1) {
                                             let values = [...selectedCards]
                                             values.push(selectedCard); 
                                             setSelectedCards(values);
@@ -103,7 +104,8 @@ const Table = ({width, height, score} : TableProps) => {
                                     
                                 }
                                 >
-                            <Card isFlipped={selectedCards.includes(`${rowIndex} ${colIndex}`)} isShowCard={!hiddenCards.includes(`${rowIndex} ${colIndex}`)}>
+                            <Card isFlipped={selectedCards.findIndex((val : CardIndexInterface) => val.x == rowIndex && val.y == colIndex) !== -1}
+                                  isShowCard={hiddenCards.findIndex((val : CardIndexInterface) => val.x == rowIndex && val.y == colIndex) === -1}>
                                 <img src={`card-${tableCards[rowIndex * (width) + colIndex]}.png`} />
                             </Card>
                         </td>)
