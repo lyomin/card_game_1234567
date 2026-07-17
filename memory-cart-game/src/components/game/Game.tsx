@@ -2,9 +2,10 @@ import { useState } from "react"
 import LevelSelector from "../../form/level/LevelSelector";
 import toast from "react-hot-toast";
 import Table from "../table/Table";
+import { TableLevel } from "../../model/TableLevel";
 
 const Game = () => {
-    const [level, setLevel] = useState<number[]|null>(null);
+    const [level, setLevel] = useState<TableLevel|null>(null);
 
     const handleScore = (resultInSec: number) => {
 
@@ -51,10 +52,10 @@ const Game = () => {
 
     if (level === null) {
         return <>
-            <LevelSelector levels={new Map<string, number[]>([
-                ["Hard", [4,4]],
-                ["Medium", [2,4]],
-                ["Easy" , [2,2]]
+            <LevelSelector levels={new Map<string, TableLevel>([
+                ["Easy", new TableLevel(2,2)],
+                ["Medium", new TableLevel(4,2)],
+                ["Hard" , new TableLevel(4,4)]
             ])} 
             setLevel={(level) => setLevel(level)} />
         </>
@@ -62,7 +63,8 @@ const Game = () => {
 
     return (
         <>
-            <Table height={level[0]} width={level[1]} score={handleScore} />
+            <button onClick={() => setLevel(null)}>Select deificulity</button>
+            <Table height={level.height} width={level.width} score={handleScore} />
         </>
     )
 }
