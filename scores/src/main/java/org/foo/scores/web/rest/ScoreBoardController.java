@@ -70,7 +70,11 @@ public class ScoreBoardController {
                             description = "Score successfully saved",
                             content = @Content(schema = @Schema(implementation = Score.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid request payload",
+                            content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+                    )
             }
     )
     @PostMapping
