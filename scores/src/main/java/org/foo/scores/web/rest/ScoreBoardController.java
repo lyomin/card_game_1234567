@@ -1,6 +1,7 @@
 package org.foo.scores.web.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +33,7 @@ public class ScoreBoardController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Successfully retrieved the best scores",
-                            content = @Content(schema = @Schema(implementation = List.class))
+                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = Score.class)))
                     )
             }
     )
