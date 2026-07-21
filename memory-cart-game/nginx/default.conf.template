@@ -1,0 +1,35 @@
+server {
+    listen 80;
+    server_name localhost;
+
+    # 1. FRONTEND: Aptarnauja vartotojo sąsają iš pagrindinio "/" kelio
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        # Užtikrina Single Page Applications (React, Vue, Angular) maršrutizavimą
+        try_files $uri $uri/ /index.html;
+    }
+
+    # 2. BACKEND REVERSE PROXY: Nukreipia užklausas iš kintamojo kelio
+    # Pvz., jei $API_PATH yra "/api", tai užklausos į "/api/users" keliaus į backend'ą
+    location ${API_PATH} {
+        proxy_pass ${API_ENDPOINT};
+        
+        # Standartinės antraštės reverse proxy veikimui ir tikrojo kliento IP perdavimui
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # WebSocket palaikymas (jei jūsų backend'as naudoja Spring WebSockets ar SSE)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    # Klaidos puslapių valdymas
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
