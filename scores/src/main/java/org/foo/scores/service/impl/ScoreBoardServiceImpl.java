@@ -19,13 +19,13 @@ public class ScoreBoardServiceImpl implements ScoreBoardService {
     }
 
     @Override
-    public List<Score> top10() {
-        return scoreBoardRepository.getTop10();
+    public List<Score> top10(String mode) {
+        return scoreBoardRepository.getTop10(mode);
     }
 
     @Override
-    public Optional<Score> bestUser(String username) {
-        return scoreBoardRepository.getBestUser(username);
+    public Optional<Score> bestUser(String mode, String username) {
+        return scoreBoardRepository.getBestUser(mode, username);
     }
 
     @Transactional

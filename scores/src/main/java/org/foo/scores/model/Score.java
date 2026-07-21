@@ -1,8 +1,16 @@
 package org.foo.scores.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name="score_board")
-public record Score(@Id Long id, Long points, String username) {
+@Schema(description = "Game mode results")
+@Table(name="SCORE_BOARD")
+public record Score(
+        @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+        @Id Long id,
+        Long points,
+        String username,
+        String mode
+) {
 }
