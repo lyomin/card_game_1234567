@@ -18,13 +18,13 @@ public class ScoreBoardController {
         this.scoreBoardService = scoreBoardService;
     }
 
-    @GetMapping("top-10")
-    public List<Score> top10 () {
-        return scoreBoardService.top10();
+    @GetMapping("{mode}/top-10")
+    public List<Score> top10 (@PathVariable("mode") String mode) {
+        return scoreBoardService.top10(mode);
     }
-    @GetMapping("{username}/best")
-    public ResponseEntity<Score> bestUser(@PathVariable("username") String username) {
-        Optional<Score> topScore = scoreBoardService.bestUser(username);
+    @GetMapping("{username}/{mode}/best")
+    public ResponseEntity<Score> bestUser(@PathVariable("mode") String mode, @PathVariable("username") String username) {
+        Optional<Score> topScore = scoreBoardService.bestUser(mode, username);
         return ResponseEntity.of(topScore);
     }
     @PostMapping

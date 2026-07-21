@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ScoreBoardService {
-    List<Score> top10();
-    Optional<Score> bestUser(String username);
+    List<Score> top10(String mode);
+    Optional<Score> bestUser(String mode, String username);
     Score setNewScore(Score score);
 }

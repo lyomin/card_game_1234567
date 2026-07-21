@@ -14,6 +14,7 @@ public class WebSecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         // @formatter:off
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .anyRequest().permitAll()
                 )
