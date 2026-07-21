@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.foo.scores.model.Score;
 import org.foo.scores.service.ScoreBoardService;
+import org.foo.scores.web.rest.doc.ApiErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +69,7 @@ public class ScoreBoardController {
                             description = "Score successfully saved",
                             content = @Content(schema = @Schema(implementation = Score.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content)
+                    @ApiResponse(responseCode = "400", description = "Invalid request payload", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
             }
     )
     @PostMapping
