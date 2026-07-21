@@ -14,7 +14,7 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 public class WebSecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        // @formatter:off
+
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -28,7 +28,7 @@ public class WebSecurityConfiguration {
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll);
-        // @formatter:on
+
 
         return http.build();
     }
