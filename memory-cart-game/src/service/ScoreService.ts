@@ -43,12 +43,18 @@ class ScoreService {
    * Get player's best score
    * Retrieves the highest recorded score for a specific player in a given game mode.
    */
-  async bestUser(username: string, mode: string): Promise<Score> {
+  async bestUser(username: string, mode: string): Promise<Score|null> {
     const response = await fetch(
       `${this.baseUrl}/ratings/${encodeURIComponent(username)}/${encodeURIComponent(mode)}/best`,
       { method: 'GET' }
     );
-    return this.handleResponse<Score>(response);
+    
+    return this.handleResponse<Score>(response).catch(err => {
+        if (err?.status === 404) {
+            return null;
+        }
+        throw err;
+    });
   }
 
   /**
