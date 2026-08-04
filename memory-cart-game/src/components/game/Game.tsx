@@ -3,6 +3,8 @@ import LevelSelector from "../../form/level/LevelSelector";
 import toast from "react-hot-toast";
 import Table from "../table/Table";
 import { TableLevel } from "../../model/TableLevel";
+import ScoreBoard from "../score/ScoreBoard";
+import { scoreService } from "../../service/ScoreService";
 
 const Game = () => {
     const [level, setLevel] = useState<TableLevel|null>(null);
@@ -14,9 +16,8 @@ const Game = () => {
     // Iškviečiame custom toast, kuris grąžina unikalų objekto ID (t)
     toast((t) => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
-          You done it in {resultInSec} seconds
-        </span>
+        {!!level && <ScoreBoard mode={level.name} points={scoreService.sec2points(resultInSec)} />}
+        {!level && "unexpected error"}
         
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
           
@@ -53,9 +54,9 @@ const Game = () => {
     if (level === null) {
         return <>
             <LevelSelector levels={new Map<string, TableLevel>([
-                ["Easy", new TableLevel(2,2)],
-                ["Medium", new TableLevel(4,2)],
-                ["Hard" , new TableLevel(4,4)]
+                ["Easy", new TableLevel(2,2,"2x2")],
+                ["Medium", new TableLevel(4,2,"4x2")],
+                ["Hard" , new TableLevel(4,4,"4x4")]
             ])} 
             setLevel={(level) => setLevel(level)} />
         </>

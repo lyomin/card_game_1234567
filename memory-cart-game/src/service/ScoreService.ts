@@ -4,7 +4,7 @@ import type { Score } from "../model/Score";
 
 class ScoreService {
 
-  private baseUrl: string = import.meta.env.SCIRE_HOST;
+  private baseUrl: string = import.meta.env.VITE_SCIRE_HOST;
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
@@ -29,12 +29,13 @@ class ScoreService {
    * Submits a player score for a specific mode. The database automatically generates the ID.
    */
   async setScore(score: Score): Promise<Score> {
-    const response = await fetch(`${this.baseUrl}/ratings`, {
+    const response = await fetch(`${this.baseUrl}/ratings/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(score),
+      credentials: "include",
     });
     return this.handleResponse<Score>(response);
   }
@@ -46,7 +47,7 @@ class ScoreService {
   async bestUser(username: string, mode: string): Promise<Score|null> {
     const response = await fetch(
       `${this.baseUrl}/ratings/${encodeURIComponent(username)}/${encodeURIComponent(mode)}/best`,
-      { method: 'GET' }
+      { method: 'GET', credentials: "include" },
     );
     
     return this.handleResponse<Score>(response).catch(err => {
@@ -64,9 +65,16 @@ class ScoreService {
   async top10(mode: string): Promise<Score[]> {
     const response = await fetch(
       `${this.baseUrl}/ratings/${encodeURIComponent(mode)}/top-10`,
-      { method: 'GET' }
+      { method: 'GET', credentials: "include" }
     );
     return this.handleResponse<Score[]>(response);
+  }
+
+  sec2points(time: number) : number {
+    const maxPoints = 10000;
+    const k = 0.05;
+
+    return Math.round(maxPoints * Math.exp(-k * time)); 
   }
 }
 
