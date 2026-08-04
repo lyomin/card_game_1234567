@@ -87,7 +87,7 @@ class ScoreService {
 
   sec2points(time: number) : number {
     const maxPoints = 10000;
-    const k = 0.05;
+    const k = 0.01;
 
     return Math.round(maxPoints * Math.exp(-k * time)); 
   }
