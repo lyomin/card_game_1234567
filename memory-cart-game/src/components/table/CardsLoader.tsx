@@ -32,7 +32,12 @@ const CardsLoader = ({size, onLoaded}: CardsLoaderProps) => {
 
     if (loaded) return (<></>);
 
-    return (<div>LOADING</div>)
+    return (<div style={{
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center',     
+        height: '500px',          
+    }}>LOADING</div>)
 }
 
 

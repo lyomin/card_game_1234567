@@ -6,6 +6,10 @@ class ScoreService {
 
   private baseUrl: string = import.meta.env.VITE_SCIRE_HOST;
 
+  constructor() {
+    this.baseUrl = window.location.origin;
+  }
+
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       let errorData: ApiErrorResponse | string;
