@@ -6,6 +6,7 @@ import { TableLevel } from "../../model/TableLevel";
 import ScoreBoard from "../score/ScoreBoard";
 import { scoreService } from "../../service/ScoreService";
 import { ErrorBoundary } from "react-error-boundary";
+import overlay from "./Overlay";
 
 const Game = () => {
     const [level, setLevel] = useState<TableLevel|null>(null);
@@ -14,58 +15,17 @@ const Game = () => {
 
     setLevel(null);
 
-    // Iškviečiame custom toast, kuris grąžina unikalų objekto ID (t)
-    toast.custom((t) => (
-      <div style={{
-    background: '#fff',
-    padding: '16px',
-    borderRadius: '8px',
-    // Šešėlis padengia visą ekraną
-    boxShadow: '0 0 0 100vmax rgba(0, 0, 0, 0.5)', 
-    position: 'relative',
-    zIndex: 9999
-    }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    overlay(
+      <>
         {!!level && 
         <ErrorBoundary fallback={<h1>A server error occurred.</h1>}>
           <ScoreBoard mode={level.name} points={scoreService.sec2points(resultInSec)} />
         </ErrorBoundary>
         }
         {!level && "unexpected error"}
-        
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-          
-          {/* „TAIP“ Mygtukas */}
-          <button
-            onClick={() => {
-              toast.dismiss(t.id); // Uždarome pranešimą
-            }}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#ef4444', // Raudona (Confirm)
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              width: '100%'
-            }}
-          >
-            Close
-          </button>
-        </div>
-      </div>
-      </div>
-    ), {
-      duration: Infinity, // Pranešimas neišnyks automatiškai, kol vartotojas nepaspaus mygtuko
-      position: 'top-center',
-      style: {
-        background: '#fff',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-        padding: '16px',
-        borderRadius: '12px'
-      }
-    })};
+      </>
+
+  )};
 
     if (level === null) {
         return <>

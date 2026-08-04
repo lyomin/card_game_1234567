@@ -12,11 +12,12 @@ const ScoreTop10 = ({userScore, mode}: ScoreTop10Props) => {
     const [scores, setScores] = useState<Score[]|null>(null);
 
     useEffect(() => {
+        setScores(null);
         scoreService.top10(mode).then((s) => {setScores(s)});
     }, [userScore])
 
     if (scores === null) {
-        return <>Loading ...</>
+        return <div style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>Loading ...</div>
     }
 
     if (scores.length == 0) {

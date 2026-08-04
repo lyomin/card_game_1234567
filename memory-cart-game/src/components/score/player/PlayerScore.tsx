@@ -7,9 +7,9 @@ interface PlayerScoreInterface {
 
 const PlayerScore = ({username, points}: PlayerScoreInterface) => {
     if (username) return (
-        <div>You {username} scored {points}</div>
+        <h1>You {username} scored {points}</h1>
     );
-    return (<div>You scored {points}</div>);
+    return (<h1>You scored {points}</h1>);
 }
 
 export default PlayerScore;
