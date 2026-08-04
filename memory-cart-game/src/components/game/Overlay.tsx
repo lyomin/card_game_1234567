@@ -38,7 +38,7 @@ const overlay = (children: ReactNode) => {
           </button>
         </div>
       </div>
-      </div>
+    </div>
     ), {
       duration: Infinity,
       position: 'top-center',
