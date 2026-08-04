@@ -10,17 +10,18 @@ interface TableProps {
     score: (time: number) => void;
 }
 
-const getIndex = (index: CardIndexInterface, width: number): number => {
-    return index.x * width + index.y;
-};
-
-const getSeconds = (date: Date) => {
-    return Math.floor(date.getTime() / 1000)
+// Keep pure utilities in a static helper class
+class CardUtils {
+    static getIndex(index: CardIndexInterface, width: number): number {
+        return index.x * width + index.y;
+    }
+    static getSeconds(date: Date): number {
+        return Math.floor(date.getTime() / 1000);
+    }
 }
-const Table = ({ width, height, score }: TableProps) => {
 
-    const [loadedImages, setLodedImages] = useState<HTMLImageElement[]>([]);
-
+// 1. EXTRACTED CUSTOM HOOK FOR STATE LOGIC
+const useMemoryGame = (width: number, height: number, score: (time: number) => void) => {
     const [selectedCards, setSelectedCards] = useState<CardIndexInterface[]>([]);
     const [tableCards, setTableCards] = useState<number[]>([]);
     const [hiddenCards, setHiddenCards] = useState<CardIndexInterface[]>([]);
@@ -28,7 +29,6 @@ const Table = ({ width, height, score }: TableProps) => {
 
     const populateValues = () => {
         const totalCount = (width * height) / 2;
-
         let arr: number[] = [];
         for (let i = 0; i < totalCount; i++) {
             arr.push(i);
@@ -39,93 +39,97 @@ const Table = ({ width, height, score }: TableProps) => {
         setSelectedCards([]);
         setHiddenCards([]);
         setStartTime(null);
-    }
+    };
 
-    useEffect(populateValues, [])
-
-
+    useEffect(populateValues, [width, height]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             if (selectedCards.length > 1) {
-                if (tableCards[getIndex(selectedCards[0], width)] === tableCards[getIndex(selectedCards[1], width)]) {
-                    let values = [...hiddenCards]
-                    values.push(selectedCards[0]);
-                    values.push(selectedCards[1]);
-                    setHiddenCards(values);
+                const idx0 = CardUtils.getIndex(selectedCards[0], width);
+                const idx1 = CardUtils.getIndex(selectedCards[1], width);
+                
+                if (tableCards[idx0] === tableCards[idx1]) {
+                    setHiddenCards(prev => [...prev, selectedCards[0], selectedCards[1]]);
                 }
                 setSelectedCards([]);
             }
         }, 600);
-
         return () => clearTimeout(timer);
-    }, [selectedCards]);
-
+    }, [selectedCards, tableCards, width]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (hiddenCards.length == width * height) {
+            if (hiddenCards.length === width * height && hiddenCards.length > 0) {
                 populateValues();
             }
         }, 600);
-
         return () => clearTimeout(timer);
-    }, [hiddenCards]);
+    }, [hiddenCards, width, height]);
 
     const onSelect = (selectedCard: CardIndex) => {
-        // add selecyed if visable and not selected
         if (selectedCards.length < 2
-            && selectedCards.findIndex((val: CardIndexInterface) => selectedCard.isSame(val)) === -1
-            && hiddenCards.findIndex((val: CardIndexInterface) => selectedCard.isSame(val)) === -1) {
-            let values = [...selectedCards]
-            values.push(selectedCard);
-            setSelectedCards(values);
+            && selectedCards.findIndex((val) => selectedCard.isSame(val)) === -1
+            && hiddenCards.findIndex((val) => selectedCard.isSame(val)) === -1) {
+            setSelectedCards(prev => [...prev, selectedCard]);
         }
-        // mark start game
+        
         if (startTime == null) {
             setStartTime(new Date());
         }
-        // on end of the game calculate score
-        if (selectedCards.length > 0 && hiddenCards.length == width * height - 2 && tableCards[getIndex(selectedCards[0], width)] === tableCards[getIndex(selectedCard, width)]) {
-            if (startTime != null) {
-                const doneInSecods = Math.abs(getSeconds(new Date()) - getSeconds(startTime));
-                score(doneInSecods);
+
+        if (selectedCards.length > 0 && hiddenCards.length === width * height - 2) {
+            const idx0 = CardUtils.getIndex(selectedCards[0], width);
+            const idxSelected = CardUtils.getIndex(selectedCard, width);
+            
+            if (tableCards[idx0] === tableCards[idxSelected] && startTime != null) {
+                const doneInSeconds = Math.abs(CardUtils.getSeconds(new Date()) - CardUtils.getSeconds(startTime));
+                score(doneInSeconds);
             }
         }
-    }
+    };
+
+    return { selectedCards, tableCards, hiddenCards, onSelect };
+};
+
+// 2. CLEAN PRESENTATIONAL COMPONENT
+const Table = ({ width, height, score }: TableProps) => {
+    const [loadedImages, setLodedImages] = useState<HTMLImageElement[]>([]);
+    
+    // Consume the extracted state logic here
+    const { selectedCards, tableCards, hiddenCards, onSelect } = useMemoryGame(width, height, score);
 
     const rowsArray = Array.from({ length: height });
     const colsArray = Array.from({ length: width });
 
-    if (loadedImages.length == 0)
+    if (loadedImages.length === 0)
         return (<CardsLoader size={(width * height) / 2} onLoaded={(images) => setLodedImages(images)} />);
+    
     return (
         <div className='main-content'>
-
             <table className='gameBoard'>
-                {rowsArray.map((_, rowIndex) =>
-                (<tr key={rowIndex}>
-                    {colsArray.map((_, colIndex) =>
-                    (<td
-                        key={colIndex}
-                        onClick={
-                            () => {
-                               onSelect(new CardIndex(rowIndex, colIndex));
-                            }
-                        }
-                    >
-                        <Card isFlipped={selectedCards.findIndex((val: CardIndexInterface) => val.sSameCoradinate(rowIndex,colIndex)) !== -1}
-                            isShowCard={hiddenCards.findIndex((val: CardIndexInterface) => val.sSameCoradinate(rowIndex,colIndex)) === -1}>
-                            <DomImageWrapper imageElement={loadedImages[tableCards[rowIndex * (width) + colIndex]].cloneNode(true) as HTMLImageElement} />
-                        </Card>
-                    </td>)
-                    )
-                    }</tr>)
-                )
-                }
+                <tbody>
+                    {rowsArray.map((_, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {colsArray.map((_, colIndex) => {
+                                const cardIndexInTable = rowIndex * width + colIndex;
+                                const isFlipped = selectedCards.findIndex((val) => val.sSameCoordinate(rowIndex, colIndex)) !== -1;
+                                const isShowCard = hiddenCards.findIndex((val) => val.sSameCoordinate(rowIndex, colIndex)) === -1;
+
+                                return (
+                                    <td key={colIndex} onClick={() => onSelect(new CardIndex(rowIndex, colIndex))}>
+                                        <Card isFlipped={isFlipped} isShowCard={isShowCard}>
+                                            <DomImageWrapper imageElement={loadedImages[tableCards[cardIndexInTable]]?.cloneNode(true) as HTMLImageElement} />
+                                        </Card>
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    ))}
+                </tbody>
             </table>
         </div>
     );
-}
+};
 
 export default Table;
