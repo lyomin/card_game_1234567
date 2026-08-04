@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Card from '../card/Card';
 import './style.css'
 import { CardIndex, type CardIndexInterface } from '../../model/CardIndex';
+import CardsLoader from './CardsLoader';
+import DomImageWrapper from './DomImageWrapper';
 interface TableProps {
     width: number;
     height: number;
@@ -17,6 +19,7 @@ const getSeconds = (date: Date) => {
 }
 const Table = ({width, height, score} : TableProps) => {
 
+    const [loadedImages, setLodedImages] = useState<HTMLImageElement[]>([]);
 
     const [selectedCards, setSelectedCards] = useState<CardIndexInterface[]>([]);
     const [tableCards, setTableCards] = useState<number[]>([]);
@@ -72,8 +75,11 @@ const Table = ({width, height, score} : TableProps) => {
     const rowsArray = Array.from({ length: height });
     const colsArray = Array.from({ length: width });
 
+    if (loadedImages.length == 0)
+        return (<CardsLoader size={(width * height) / 2} onLoaded={(images) => setLodedImages(images)} />);
   return (
     <div className='main-content'>	
+        
         <table className='gameBoard'>
             {rowsArray.map((_,rowIndex) => 
                 (<tr key={rowIndex}>  
@@ -106,7 +112,7 @@ const Table = ({width, height, score} : TableProps) => {
                                 >
                             <Card isFlipped={selectedCards.findIndex((val : CardIndexInterface) => val.x == rowIndex && val.y == colIndex) !== -1}
                                   isShowCard={hiddenCards.findIndex((val : CardIndexInterface) => val.x == rowIndex && val.y == colIndex) === -1}>
-                                <img src={`card-${tableCards[rowIndex * (width) + colIndex]}.png`} />
+                               <DomImageWrapper imageElement={loadedImages[tableCards[rowIndex * (width) + colIndex]].cloneNode(true) as HTMLImageElement} />
                             </Card>
                         </td>)
                     )
