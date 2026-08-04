@@ -24,15 +24,26 @@ class ScoreService {
     return response.json() as Promise<T>;
   }
 
+  getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(';').shift() || null;
+    return null;
+  };
+
   /**
    * Submit a new game score
    * Submits a player score for a specific mode. The database automatically generates the ID.
    */
   async setScore(score: Score): Promise<Score> {
+
+    const csrfToken = this.getCookie("XSRF-TOKEN");
+
     const response = await fetch(`${this.baseUrl}/ratings/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        "X-XSRF-TOKEN": csrfToken || "",
       },
       body: JSON.stringify(score),
       credentials: "include",
