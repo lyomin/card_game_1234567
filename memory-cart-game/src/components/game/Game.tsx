@@ -47,10 +47,11 @@ const Game = () => {
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              width: '100%'
             }}
           >
-            Taip
+            Close
           </button>
         </div>
       </div>
