@@ -5,6 +5,7 @@ import Table from "../table/Table";
 import { TableLevel } from "../../model/TableLevel";
 import ScoreBoard from "../score/ScoreBoard";
 import { scoreService } from "../../service/ScoreService";
+import { ErrorBoundary } from "react-error-boundary";
 
 const Game = () => {
     const [level, setLevel] = useState<TableLevel|null>(null);
@@ -16,7 +17,11 @@ const Game = () => {
     // Iškviečiame custom toast, kuris grąžina unikalų objekto ID (t)
     toast((t) => (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {!!level && <ScoreBoard mode={level.name} points={scoreService.sec2points(resultInSec)} />}
+        {!!level && 
+        <ErrorBoundary fallback={<h1>A server error occurred.</h1>}>
+          <ScoreBoard mode={level.name} points={scoreService.sec2points(resultInSec)} />
+        </ErrorBoundary>
+        }
         {!level && "unexpected error"}
         
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>

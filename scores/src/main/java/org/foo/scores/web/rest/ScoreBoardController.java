@@ -77,7 +77,7 @@ public class ScoreBoardController {
                     )
             }
     )
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Score> setScore(@RequestBody Score score) {
         return ResponseEntity.ok(scoreBoardService.setNewScore(score));
     }
