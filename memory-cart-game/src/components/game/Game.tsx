@@ -15,7 +15,16 @@ const Game = () => {
     setLevel(null);
 
     // Iškviečiame custom toast, kuris grąžina unikalų objekto ID (t)
-    toast((t) => (
+    toast.custom((t) => (
+      <div style={{
+    background: '#fff',
+    padding: '16px',
+    borderRadius: '8px',
+    // Šešėlis padengia visą ekraną
+    boxShadow: '0 0 0 100vmax rgba(0, 0, 0, 0.5)', 
+    position: 'relative',
+    zIndex: 9999
+    }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {!!level && 
         <ErrorBoundary fallback={<h1>A server error occurred.</h1>}>
@@ -44,6 +53,7 @@ const Game = () => {
             Taip
           </button>
         </div>
+      </div>
       </div>
     ), {
       duration: Infinity, // Pranešimas neišnyks automatiškai, kol vartotojas nepaspaus mygtuko
