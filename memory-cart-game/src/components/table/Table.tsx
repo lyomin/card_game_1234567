@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Card from '../card/Card';
 import './style.css'
 import { CardIndex, type CardIndexInterface } from '../../model/CardIndex';
