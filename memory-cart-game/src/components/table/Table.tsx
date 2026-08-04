@@ -56,7 +56,7 @@ const useMemoryGame = (width: number, height: number, score: (time: number) => v
             }
         }, 600);
         return () => clearTimeout(timer);
-    }, [selectedCards, tableCards, width]);
+    }, [selectedCards]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -65,7 +65,7 @@ const useMemoryGame = (width: number, height: number, score: (time: number) => v
             }
         }, 600);
         return () => clearTimeout(timer);
-    }, [hiddenCards, width, height]);
+    }, [hiddenCards]);
 
     const onSelect = (selectedCard: CardIndex) => {
         if (selectedCards.length < 2
